@@ -39,11 +39,48 @@ mixin _$Controller on _ControllerBase, Store {
     });
   }
 
+  final _$toDoLengthAtom = Atom(name: '_ControllerBase.toDoLength');
+
+  @override
+  int get toDoLength {
+    _$toDoLengthAtom.reportRead();
+    return super.toDoLength;
+  }
+
+  @override
+  set toDoLength(int value) {
+    _$toDoLengthAtom.reportWrite(value, super.toDoLength, () {
+      super.toDoLength = value;
+    });
+  }
+
+  final _$doneLengthAtom = Atom(name: '_ControllerBase.doneLength');
+
+  @override
+  int get doneLength {
+    _$doneLengthAtom.reportRead();
+    return super.doneLength;
+  }
+
+  @override
+  set doneLength(int value) {
+    _$doneLengthAtom.reportWrite(value, super.doneLength, () {
+      super.doneLength = value;
+    });
+  }
+
+  final _$updateTaskAsyncAction = AsyncAction('_ControllerBase.updateTask');
+
+  @override
+  Future<void> updateTask(TaskStore task) {
+    return _$updateTaskAsyncAction.run(() => super.updateTask(task));
+  }
+
   final _$_ControllerBaseActionController =
       ActionController(name: '_ControllerBase');
 
   @override
-  dynamic setTaskDone(TaskStore task, bool value) {
+  void setTaskDone(TaskStore task, bool value) {
     final _$actionInfo = _$_ControllerBaseActionController.startAction(
         name: '_ControllerBase.setTaskDone');
     try {
@@ -54,9 +91,33 @@ mixin _$Controller on _ControllerBase, Store {
   }
 
   @override
+  void addTask(TaskStore task) {
+    final _$actionInfo = _$_ControllerBaseActionController.startAction(
+        name: '_ControllerBase.addTask');
+    try {
+      return super.addTask(task);
+    } finally {
+      _$_ControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeTask(TaskStore task) {
+    final _$actionInfo = _$_ControllerBaseActionController.startAction(
+        name: '_ControllerBase.removeTask');
+    try {
+      return super.removeTask(task);
+    } finally {
+      _$_ControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
-userName: ${userName}
+userName: ${userName},
+toDoLength: ${toDoLength},
+doneLength: ${doneLength}
     ''';
   }
 }

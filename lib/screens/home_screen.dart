@@ -16,6 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     _controller = Provider.of<Controller>(context);
+    _controller.loadTaskList();
+    _controller.loadUserName();
 
     return DefaultTabController(
       length: 2,
@@ -26,11 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
             tabs: [
               Tab(
                 icon: Icon(Icons.check_box_outline_blank),
-                text: "A concluir",
               ),
               Tab(
                 icon: Icon(Icons.check),
-                text: "Concluídas",
               )
             ],
           ),
@@ -53,53 +53,29 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _taskListToDo() {
     Function tasks = _controller.getToDoTasks;
     _controller.loadTaskList();
-    return Observer(
-      builder: (context) {
-        if (tasks().length != null) {
-          return Center(
-            child: Text(
-              "Não há tarefas a concluir",
-              style: TextStyle(color: Colors.grey, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          );
-        } else {
-          return ListView.builder(
-            itemCount: tasks().length,
-            itemBuilder: (_, index) {
-              TaskStore task = tasks()[index];
-              return taskTile(task);
-            },
-          );
-        }
-      },
-    );
+    return Observer(builder: (context) {
+      return ListView.builder(
+        itemCount: tasks().length,
+        itemBuilder: (_, index) {
+          TaskStore task = tasks()[index];
+          return taskTile(task);
+        },
+      );
+    });
   }
 
   Widget _taskListDone() {
-    Function tasks = _controller.getToDoTasks;
+    Function tasks = _controller.getDoneTasks;
     _controller.loadTaskList();
-    return Observer(
-      builder: (context) {
-        if (tasks().length != null) {
-          return Center(
-            child: Text(
-              "Não há tarefas concluídas",
-              style: TextStyle(color: Colors.grey, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          );
-        } else {
-          return ListView.builder(
-            itemCount: tasks().length,
-            itemBuilder: (_, index) {
-              TaskStore task = tasks()[index];
-              return taskTile(task);
-            },
-          );
-        }
-      },
-    );
+    return Observer(builder: (context) {
+      return ListView.builder(
+        itemCount: tasks().length,
+        itemBuilder: (_, index) {
+          TaskStore task = tasks()[index];
+          return taskTile(task);
+        },
+      );
+    });
   }
 
   Widget taskTile(TaskStore task) {
@@ -119,15 +95,16 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListTile(
               title: Text(
                 task.title,
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(
+              subtitle: Text("${task.description}\n" +
                 "Prazo: " + DateFormat('dd/MM, HH:mm').format(task.endDate),
                 style: TextStyle(color: Colors.black),
               ),
+              isThreeLine: true,
               leading: Checkbox(
                 value: task.done,
-                onChanged: (value){
+                onChanged: (value) {
                   _controller.setTaskDone(task, value);
                 },
                 activeColor: Colors.red,

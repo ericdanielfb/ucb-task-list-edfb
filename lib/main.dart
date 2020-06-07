@@ -5,6 +5,7 @@ import 'package:task_list_ucb_edfb/controller/controller.dart';
 import 'package:task_list_ucb_edfb/screens/home_screen.dart';
 import 'package:task_list_ucb_edfb/screens/login_screen.dart';
 import 'package:task_list_ucb_edfb/screens/splash_screen.dart';
+import 'package:task_list_ucb_edfb/screens/task_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
           "splash": (context) => SplashScreen(),
           "login": (context) => LoginScreen(),
           "home": (context) => HomeScreen(),
-          // "task": (context) => TaskScreen()
+          "task": (context) => TaskScreen()
         },
       ),
     );
