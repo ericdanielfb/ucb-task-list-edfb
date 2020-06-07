@@ -69,6 +69,21 @@ mixin _$Controller on _ControllerBase, Store {
     });
   }
 
+  final _$editedTaskAtom = Atom(name: '_ControllerBase.editedTask');
+
+  @override
+  TaskStore get editedTask {
+    _$editedTaskAtom.reportRead();
+    return super.editedTask;
+  }
+
+  @override
+  set editedTask(TaskStore value) {
+    _$editedTaskAtom.reportWrite(value, super.editedTask, () {
+      super.editedTask = value;
+    });
+  }
+
   final _$updateTaskAsyncAction = AsyncAction('_ControllerBase.updateTask');
 
   @override
@@ -113,11 +128,34 @@ mixin _$Controller on _ControllerBase, Store {
   }
 
   @override
+  void setEditedTask(TaskStore task) {
+    final _$actionInfo = _$_ControllerBaseActionController.startAction(
+        name: '_ControllerBase.setEditedTask');
+    try {
+      return super.setEditedTask(task);
+    } finally {
+      _$_ControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void clearEditedTask() {
+    final _$actionInfo = _$_ControllerBaseActionController.startAction(
+        name: '_ControllerBase.clearEditedTask');
+    try {
+      return super.clearEditedTask();
+    } finally {
+      _$_ControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 userName: ${userName},
 toDoLength: ${toDoLength},
-doneLength: ${doneLength}
+doneLength: ${doneLength},
+editedTask: ${editedTask}
     ''';
   }
 }

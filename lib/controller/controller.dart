@@ -71,9 +71,7 @@ abstract class _ControllerBase with Store {
     if (_listStr != null) {
       _listStr.map((e) {
         _list.add(TaskStore().fromJson(jsonDecode(e)));
-        print("Tarefa: " + e);
       }).toList();
-      print("Lista carregada");
     }
     _taskList = _list;
   }
@@ -87,7 +85,6 @@ abstract class _ControllerBase with Store {
   @action
   void addTask(TaskStore task) {
     _taskList.add(task);
-    print("Task adicionada");
     saveTaskList();
   }
 
@@ -108,4 +105,12 @@ abstract class _ControllerBase with Store {
     );
     saveTaskList();
   }
+
+  @observable
+  TaskStore editedTask;
+  @action
+  void setEditedTask(TaskStore task) => editedTask = task;
+
+  @action
+  void clearEditedTask() => editedTask = null;
 }

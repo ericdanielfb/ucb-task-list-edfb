@@ -6,15 +6,11 @@ import 'package:task_list_ucb_edfb/controller/controller.dart';
 import 'package:task_list_ucb_edfb/stores/task_store.dart';
 
 class TaskScreen extends StatefulWidget {
-  TaskStore task;
-  TaskScreen({this.task});
   @override
-  _TaskScreenState createState() => _TaskScreenState(task: task);
+  _TaskScreenState createState() => _TaskScreenState();
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  _TaskScreenState({TaskStore task});
-
   final _formKey = GlobalKey<FormState>();
   Controller _controller;
 
@@ -22,19 +18,23 @@ class _TaskScreenState extends State<TaskScreen> {
   String _description;
   DateTime _endDate;
 
+  TaskStore _editedTask;
+
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
+  DateTime _endDateController;
+
   void _save() {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      TaskStore _task = TaskStore(
-        title: _title,
-        description: _description,
-        endDate: _endDate,
-      );
+      _editedTask.setTitle(_title);
+      _editedTask.setDescription(_description);
+      _editedTask.setEndDate(_endDate);
+      print(_editedTask);
 
-      print(_task);
-
-      _controller.addTask(_task);
+      _controller.addTask(_editedTask);
+      _controller.clearEditedTask();
       Navigator.of(context).pop();
     }
   }
@@ -42,6 +42,13 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     _controller = Provider.of<Controller>(context);
+    _editedTask = _controller.editedTask ?? TaskStore();
+
+    if(_editedTask != null){
+      _titleController.text = _editedTask.title;
+      _descriptionController.text = _editedTask.description;
+      _endDateController = _editedTask.endDate;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -52,7 +59,7 @@ class _TaskScreenState extends State<TaskScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Text(
-              "Nova Tarefa",
+              _controller.editedTask == null ? "Nova Tarefa" : "Editar Tarefa",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 25,
@@ -68,6 +75,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: TextFormField(
                     decoration: InputDecoration(labelText: "Título"),
+                    controller: _titleController,
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Por favor, digite o título.';
@@ -87,6 +95,7 @@ class _TaskScreenState extends State<TaskScreen> {
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(labelText: "Descrição"),
                     maxLines: 5,
+                    controller: _descriptionController,
                     onSaved: (value) {
                       this._description = value;
                     },
@@ -96,6 +105,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: DateTimeField(
+                    initialValue: _endDateController,
                     decoration: InputDecoration(labelText: "Prazo"),
                     format: DateFormat("dd/MM/yyyy, HH:mm"),
                     onShowPicker: (context, currentValue) async {
@@ -111,7 +121,8 @@ class _TaskScreenState extends State<TaskScreen> {
                             currentValue ?? DateTime.now(),
                           ),
                         );
-                        return DateTimeField.combine(date, time);
+                        DateTime value = DateTimeField.combine(date, time);
+                        return value;
                       } else {
                         return currentValue;
                       }

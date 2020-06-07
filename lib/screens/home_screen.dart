@@ -95,10 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListTile(
               title: Text(
                 task.title,
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
-              subtitle: Text("${task.description}\n" +
-                "Prazo: " + DateFormat('dd/MM, HH:mm').format(task.endDate),
+              subtitle: Text(
+                "${task.description}\n" +
+                    "Prazo: " +
+                    DateFormat('dd/MM, HH:mm').format(task.endDate),
                 style: TextStyle(color: Colors.black),
               ),
               isThreeLine: true,
@@ -109,6 +112,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 activeColor: Colors.red,
               ),
+              onTap: () {
+                _controller.setEditedTask(task);
+                print("edited task: " + _controller.editedTask.toString());
+                Navigator.of(context).pushNamed("task");
+              },
             ),
           ),
         );

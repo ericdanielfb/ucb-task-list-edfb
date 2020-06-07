@@ -28,7 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     _controller = Provider.of<Controller>(context);
     _textEditingController.text = _controller.userName;
-    print(_controller.userName);
 
     return Scaffold(
       body: ListView(
