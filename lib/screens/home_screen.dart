@@ -11,6 +11,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   Controller _controller;
 
   @override
@@ -22,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text(_controller.userName),
           bottom: TabBar(
@@ -83,44 +86,67 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (_) {
         return Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 15, 0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(),
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(offset: Offset(2, 2)),
-              ],
+          child: Dismissible(
+            background: Container(
+              color: Colors.red,
+              child: Align(
+                alignment: Alignment(-0.9, 0.0),
+                child: Icon(Icons.delete, color: Colors.white),
+              ),
             ),
-            child: ListTile(
-              title: Text(
-                task.title,
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            direction: DismissDirection.startToEnd,
+            key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
+            onDismissed: (direction) {
+              _controller.removeTask(task);
+              showSnackBar();
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(offset: Offset(2, 2)),
+                ],
               ),
-              subtitle: Text(
-                "${task.description}\n" +
-                    "Prazo: " +
-                    DateFormat('dd/MM, HH:mm').format(task.endDate),
-                style: TextStyle(color: Colors.black),
-              ),
-              isThreeLine: true,
-              leading: Checkbox(
-                value: task.done,
-                onChanged: (value) {
-                  _controller.setTaskDone(task, value);
+              child: ListTile(
+                title: Text(
+                  task.title,
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  "${task.description}\n" +
+                      "Prazo: " +
+                      DateFormat('dd/MM, HH:mm').format(task.endDate),
+                  style: TextStyle(color: Colors.black),
+                ),
+                isThreeLine: true,
+                leading: Checkbox(
+                  value: task.done,
+                  onChanged: (value) {
+                    _controller.setTaskDone(task, value);
+                  },
+                  activeColor: Colors.red,
+                ),
+                onTap: () {
+                  _controller.setEditedTask(task);
+                  print("edited task: " + _controller.editedTask.toString());
+                  Navigator.of(context).pushNamed("task");
                 },
-                activeColor: Colors.red,
               ),
-              onTap: () {
-                _controller.setEditedTask(task);
-                print("edited task: " + _controller.editedTask.toString());
-                Navigator.of(context).pushNamed("task");
-              },
             ),
           ),
         );
       },
     );
+  }
+
+  void showSnackBar() {
+    final snack = SnackBar(
+      content: Text("Tarefa removida!"),
+      duration: Duration(seconds: 2),
+    );
+    _scaffoldKey.currentState.showSnackBar(snack);
   }
 }

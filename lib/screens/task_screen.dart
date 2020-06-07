@@ -44,7 +44,7 @@ class _TaskScreenState extends State<TaskScreen> {
     _controller = Provider.of<Controller>(context);
     _editedTask = _controller.editedTask ?? TaskStore();
 
-    if(_editedTask != null){
+    if (_editedTask != null) {
       _titleController.text = _editedTask.title;
       _descriptionController.text = _editedTask.description;
       _endDateController = _editedTask.endDate;
@@ -59,7 +59,9 @@ class _TaskScreenState extends State<TaskScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Text(
-              _controller.editedTask == null ? "Nova Tarefa" : "Editar Tarefa",
+              _controller.editedTask == null
+                  ? "Nova Tarefa"
+                  : "Editar Tarefa",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 25,
