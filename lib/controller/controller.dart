@@ -8,7 +8,7 @@ class Controller = _ControllerBase with _$Controller;
 
 abstract class _ControllerBase with Store {
   @observable
-  ObservableList<TaskStore> taskList = ObservableList();
+  ObservableList<TaskStore> _taskList = ObservableList();
 
   @observable
   String userName;
@@ -16,19 +16,65 @@ abstract class _ControllerBase with Store {
   setUserName(String name) async {
     var prefs = await SharedPreferences.getInstance();
     prefs.setString('userName', name);
+    userName = name;
   }
 
-  getUserNameSP() async{
+  loadUserName() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     String _name = _prefs.getString('userName');
     userName = _name;
   }
 
-  saveListSP() async{
-  SharedPreferences _prefs = await SharedPreferences.getInstance();
-  _prefs.setStringList(
+  saveTaskList() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    _prefs.setStringList(
       'task_list',
-      taskList.map((task) => jsonEncode(task.toJson())).toList(),
+      _taskList.map((task) => jsonEncode(task.toJson())).toList(),
     );
   }
+
+  ObservableList<TaskStore> getToDoTasks() {
+    var tasks = ObservableList<TaskStore>();
+    _taskList.forEach((task) {
+      if (!task.done) {
+        tasks.add(task);
+      }
+    });
+    return tasks;
+  }
+
+  getDoneTasks() {
+    var tasks = ObservableList<TaskStore>();
+    _taskList.forEach((task) {
+      if (task.done) {
+        tasks.add(task);
+      }
+    });
+    return tasks;
+  }
+
+  loadTaskList() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    List<String> _listStr = _prefs.getStringList("lista");
+
+    ObservableList<TaskStore> _list = ObservableList<TaskStore>();
+
+    if (_listStr != null) {
+      _listStr
+          .map((e) => _list.add(TaskStore().fromJson(jsonDecode(e))))
+          .toList();
+    }
+    _taskList = _list;
+  }
+
+  @action
+  setTaskDone(TaskStore task, bool value){
+    task.setDone(value);
+    saveTaskList();
+  }
+
+
+
+
+
 }

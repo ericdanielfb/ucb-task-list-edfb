@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:task_list_ucb_edfb/controller/controller.dart';
+import 'package:task_list_ucb_edfb/screens/home_screen.dart';
 import 'package:task_list_ucb_edfb/screens/login_screen.dart';
 import 'package:task_list_ucb_edfb/screens/splash_screen.dart';
 
@@ -12,15 +13,8 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider<Controller>(
-          create: (context) => Controller(),
-        ),
-        //   Provider<TaskService>(
-        //     create: (context) => TaskService(TaskStore()),
-        //   )
-      ],
+    return Provider<Controller>(
+      create: (context) => Controller(),
       child: MaterialApp(
         title: 'Controle de Tarefas',
         theme: ThemeData(
@@ -47,7 +41,7 @@ class MyApp extends StatelessWidget {
         routes: {
           "splash": (context) => SplashScreen(),
           "login": (context) => LoginScreen(),
-          // "home": (context) => HomeScreen(),
+          "home": (context) => HomeScreen(),
           // "task": (context) => TaskScreen()
         },
       ),

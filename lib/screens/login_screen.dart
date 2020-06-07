@@ -27,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     _controller = Provider.of<Controller>(context);
-    _controller.getUserNameSP();
     _textEditingController.text = _controller.userName;
     print(_controller.userName);
 

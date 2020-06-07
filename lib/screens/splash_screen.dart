@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_list_ucb_edfb/controller/controller.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -7,6 +9,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Controller _controller;
   
 
   @override
@@ -18,6 +21,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _controller = Provider.of<Controller>(context);
+    _controller.loadUserName();
+    _controller.loadTaskList();
 
     return Scaffold(
       body: Center(

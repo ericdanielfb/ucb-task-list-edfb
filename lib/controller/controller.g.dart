@@ -9,18 +9,18 @@ part of 'controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$Controller on _ControllerBase, Store {
-  final _$taskListAtom = Atom(name: '_ControllerBase.taskList');
+  final _$_taskListAtom = Atom(name: '_ControllerBase._taskList');
 
   @override
-  ObservableList<TaskStore> get taskList {
-    _$taskListAtom.reportRead();
-    return super.taskList;
+  ObservableList<TaskStore> get _taskList {
+    _$_taskListAtom.reportRead();
+    return super._taskList;
   }
 
   @override
-  set taskList(ObservableList<TaskStore> value) {
-    _$taskListAtom.reportWrite(value, super.taskList, () {
-      super.taskList = value;
+  set _taskList(ObservableList<TaskStore> value) {
+    _$_taskListAtom.reportWrite(value, super._taskList, () {
+      super._taskList = value;
     });
   }
 
@@ -39,10 +39,23 @@ mixin _$Controller on _ControllerBase, Store {
     });
   }
 
+  final _$_ControllerBaseActionController =
+      ActionController(name: '_ControllerBase');
+
+  @override
+  dynamic setTaskDone(TaskStore task, bool value) {
+    final _$actionInfo = _$_ControllerBaseActionController.startAction(
+        name: '_ControllerBase.setTaskDone');
+    try {
+      return super.setTaskDone(task, value);
+    } finally {
+      _$_ControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
-taskList: ${taskList},
 userName: ${userName}
     ''';
   }
