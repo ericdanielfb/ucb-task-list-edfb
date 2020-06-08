@@ -18,8 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     _controller = Provider.of<Controller>(context);
-    _controller.loadTaskList();
-    _controller.loadUserName();
 
     return DefaultTabController(
       length: 2,
@@ -97,14 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
             direction: DismissDirection.startToEnd,
             key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
             onDismissed: (direction) {
-              _controller.removeTask(task);
-              showSnackBar();
+              removeTask(task);
             },
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(3),
                 boxShadow: [
                   BoxShadow(offset: Offset(2, 2)),
                 ],
@@ -130,8 +127,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   activeColor: Colors.red,
                 ),
                 onTap: () {
+                  // _controller.clearEditedTask();
                   _controller.setEditedTask(task);
-                  print("edited task: " + _controller.editedTask.toString());
                   Navigator.of(context).pushNamed("task");
                 },
               ),
@@ -142,10 +139,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  removeTask(TaskStore task) {
+    _controller.setEditedTask(task);
+    _controller.removeTask(task);
+    showSnackBar();
+  }
+
   void showSnackBar() {
     final snack = SnackBar(
       content: Text("Tarefa removida!"),
       duration: Duration(seconds: 2),
+      action: SnackBarAction(
+        label: "desfazer",
+        onPressed: () {
+          _controller.addTask(_controller.editedTask);
+          _controller.clearEditedTask();
+        },
+      ),
     );
     _scaffoldKey.currentState.showSnackBar(snack);
   }
