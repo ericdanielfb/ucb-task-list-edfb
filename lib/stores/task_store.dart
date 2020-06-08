@@ -5,8 +5,13 @@ class TaskStore = _TaskStoreBase with _$TaskStore;
 
 abstract class _TaskStoreBase with Store {
   _TaskStoreBase(
-      {this.title, this.description, this.endDate, this.done = false});
+      {this.id, this.title, this.description, this.endDate, this.done = false});
 
+  @observable
+  String id;
+  @action
+  setId(String value) => id = value;
+  
   @observable
   String title;
   @action
@@ -29,6 +34,7 @@ abstract class _TaskStoreBase with Store {
 
   TaskStore fromJson(Map<String, dynamic> json) {
     return TaskStore(
+        id: json['id'],
         title: json['title'],
         description: json['description'],
         endDate: DateTime.fromMicrosecondsSinceEpoch(json['endDate']),
@@ -36,6 +42,7 @@ abstract class _TaskStoreBase with Store {
   }
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'title': title,
         'description': description,
         'endDate': endDate.millisecondsSinceEpoch,
@@ -43,6 +50,6 @@ abstract class _TaskStoreBase with Store {
       };
 
   String toString() {
-    return 'Title: $title, Description: $description, EndDate: ${endDate.toString()}, Done: $done ';
+    return 'Id: $id, Title: $title, Description: $description, EndDate: ${endDate.toString()}, Done: $done ';
   }
 }

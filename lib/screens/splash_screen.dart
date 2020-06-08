@@ -14,11 +14,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2)).then(
+    Future.delayed(Duration(seconds: 1)).then(
       (_) => Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          transitionDuration: Duration(seconds: 1),
+          transitionDuration: Duration(milliseconds: 1000),
           pageBuilder: (_, __, ___) => LoginScreen(),
         ),
       ),
