@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/gestures.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_list_ucb_edfb/stores/task_store.dart';
@@ -91,7 +90,7 @@ abstract class _ControllerBase with Store {
   @action
   Future<void> updateTask(TaskStore task) async {
     _taskList.forEach((e) {
-      if (e.title == task.title) {
+      if (e.id == task.id) {
         e = task;
       }
     });
@@ -101,7 +100,7 @@ abstract class _ControllerBase with Store {
   @action
   void removeTask(TaskStore task) {
     _taskList.removeWhere(
-      (value) => value.title == task.title,
+      (value) => value.id == task.id,
     );
     saveTaskList();
   }

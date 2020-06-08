@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:task_list_ucb_edfb/controller/controller.dart';
 import 'package:task_list_ucb_edfb/stores/task_store.dart';
 
+enum Mode { EDIT, SAVE }
+
 class TaskScreen extends StatefulWidget {
   @override
   _TaskScreenState createState() => _TaskScreenState();
@@ -14,11 +16,13 @@ class _TaskScreenState extends State<TaskScreen> {
   final _formKey = GlobalKey<FormState>();
   Controller _controller;
 
+  Mode mode = Mode.SAVE;
+
+  TaskStore _editedTask;
+
   String _title;
   String _description;
   DateTime _endDate;
-
-  TaskStore _editedTask;
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
@@ -28,13 +32,19 @@ class _TaskScreenState extends State<TaskScreen> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
+      _editedTask = TaskStore();
+
       _editedTask.setTitle(_title);
       _editedTask.setDescription(_description);
       _editedTask.setEndDate(_endDate);
-      print(_editedTask);
+      print(_editedTask.toString());
 
-      _controller.addTask(_editedTask);
-      _controller.clearEditedTask();
+      if (mode == Mode.EDIT) {
+        _controller.updateTask(_editedTask);
+      } else if (mode == Mode.SAVE) {
+        _editedTask.setId(DateTime.now().millisecondsSinceEpoch.toString());
+        _controller.addTask(_editedTask);
+      }
       Navigator.of(context).pop();
     }
   }
@@ -42,12 +52,13 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   Widget build(BuildContext context) {
     _controller = Provider.of<Controller>(context);
-    _editedTask = _controller.editedTask ?? TaskStore();
 
-    if (_editedTask != null) {
-      _titleController.text = _editedTask.title;
-      _descriptionController.text = _editedTask.description;
-      _endDateController = _editedTask.endDate;
+    if (_controller.editedTask != null) {
+      mode = Mode.EDIT;
+      _titleController.text = _controller.editedTask.title;
+      _descriptionController.text = _controller.editedTask.description;
+      _endDateController = _controller.editedTask.endDate;
+      _controller.clearEditedTask();
     }
 
     return Scaffold(
@@ -59,9 +70,7 @@ class _TaskScreenState extends State<TaskScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Text(
-              _controller.editedTask == null
-                  ? "Nova Tarefa"
-                  : "Editar Tarefa",
+              _controller.editedTask == null ? "Nova Tarefa" : "Editar Tarefa",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 25,
@@ -143,7 +152,9 @@ class _TaskScreenState extends State<TaskScreen> {
                 ),
                 Divider(color: Colors.transparent),
                 RaisedButton(
-                  child: Text("Salvar"),
+                  child: Text(
+                    mode == Mode.SAVE ? "Salvar" : "Salvar alterações",
+                  ),
                   onPressed: _save,
                 )
               ],
