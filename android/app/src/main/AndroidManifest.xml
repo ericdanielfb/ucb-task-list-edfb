@@ -7,7 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="task_list_ucb_edfb"
+        android:label="Controle de Tarefas"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
