@@ -18,8 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     _controller = Provider.of<Controller>(context);
-    _controller.loadTaskList();
-    _controller.loadUserName();
 
     return DefaultTabController(
       length: 2,
