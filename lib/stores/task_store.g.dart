@@ -12,13 +12,13 @@ mixin _$TaskStore on _TaskStoreBase, Store {
   final _$idAtom = Atom(name: '_TaskStoreBase.id');
 
   @override
-  String get id {
+  int get id {
     _$idAtom.reportRead();
     return super.id;
   }
 
   @override
-  set id(String value) {
+  set id(int value) {
     _$idAtom.reportWrite(value, super.id, () {
       super.id = value;
     });
@@ -88,7 +88,7 @@ mixin _$TaskStore on _TaskStoreBase, Store {
       ActionController(name: '_TaskStoreBase');
 
   @override
-  dynamic setId(String value) {
+  void setId(int value) {
     final _$actionInfo = _$_TaskStoreBaseActionController.startAction(
         name: '_TaskStoreBase.setId');
     try {
