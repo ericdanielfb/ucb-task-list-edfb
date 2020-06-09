@@ -45,7 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-          onPressed: (() => {Navigator.of(context).pushNamed("task")}),
+          onPressed: (() {
+            _controller.clearEditedTask();
+            Navigator.of(context).pushNamed("task");
+          }),
         ),
       ),
     );
@@ -146,9 +149,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void showSnackBar() {
+    Duration _duration = Duration(seconds: 2);
     final snack = SnackBar(
       content: Text("Tarefa removida!"),
-      duration: Duration(seconds: 2),
+      duration: _duration,
       action: SnackBarAction(
         label: "desfazer",
         onPressed: () {
@@ -156,7 +160,11 @@ class _HomeScreenState extends State<HomeScreen> {
           _controller.clearEditedTask();
         },
       ),
+      onVisible: () {
+        Future.delayed(_duration).then((_) => _controller.clearEditedTask());
+      },
     );
+    _scaffoldKey.currentState.hideCurrentSnackBar();
     _scaffoldKey.currentState.showSnackBar(snack);
   }
 }

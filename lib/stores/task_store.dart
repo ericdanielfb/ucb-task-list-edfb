@@ -8,9 +8,9 @@ abstract class _TaskStoreBase with Store {
       {this.id, this.title, this.description, this.endDate, this.done = false});
 
   @observable
-  String id;
+  int id;
   @action
-  setId(String value) => id = value;
+  void setId(int value) => id = value;
   
   @observable
   String title;
@@ -37,7 +37,7 @@ abstract class _TaskStoreBase with Store {
         id: json['id'],
         title: json['title'],
         description: json['description'],
-        endDate: DateTime.fromMicrosecondsSinceEpoch(json['endDate']),
+        endDate: DateTime.parse(json['endDate']),
         done: json['done']);
   }
 
@@ -45,7 +45,7 @@ abstract class _TaskStoreBase with Store {
         'id': id,
         'title': title,
         'description': description,
-        'endDate': endDate.millisecondsSinceEpoch,
+        'endDate': endDate.toIso8601String(),
         'done': done
       };
 

@@ -19,6 +19,11 @@ abstract class _ControllerBase with Store {
   @observable
   int doneLength;
 
+  Future<void> reset() async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+  }
+
   Future<void> setUserName(String name) async {
     var prefs = await SharedPreferences.getInstance();
     prefs.setString('userName', name);
@@ -64,7 +69,6 @@ abstract class _ControllerBase with Store {
   Future<void> loadTaskList() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     List<String> _listStr = _prefs.getStringList("task_list");
-
     ObservableList<TaskStore> _list = ObservableList<TaskStore>();
 
     if (_listStr != null) {
@@ -89,11 +93,8 @@ abstract class _ControllerBase with Store {
 
   @action
   Future<void> updateTask(TaskStore task) async {
-    _taskList.forEach((e) {
-      if (e.id == task.id) {
-        e = task;
-      }
-    });
+    removeTask(task);
+    addTask(task);
     saveTaskList();
   }
 

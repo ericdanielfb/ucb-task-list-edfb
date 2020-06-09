@@ -18,7 +18,7 @@ class _TaskScreenState extends State<TaskScreen> {
 
   Mode mode = Mode.SAVE;
 
-  TaskStore _editedTask;
+  TaskStore _editedTask = TaskStore();
 
   String _title;
   String _description;
@@ -32,19 +32,17 @@ class _TaskScreenState extends State<TaskScreen> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      _editedTask = TaskStore();
-
       _editedTask.setTitle(_title);
       _editedTask.setDescription(_description);
       _editedTask.setEndDate(_endDate);
-      print(_editedTask.toString());
 
       if (mode == Mode.EDIT) {
         _controller.updateTask(_editedTask);
       } else if (mode == Mode.SAVE) {
-        _editedTask.setId(DateTime.now().millisecondsSinceEpoch.toString());
+        _editedTask.setId(DateTime.now().millisecondsSinceEpoch);
         _controller.addTask(_editedTask);
       }
+      _controller.loadTaskList();
       Navigator.of(context).pop();
     }
   }
@@ -55,6 +53,7 @@ class _TaskScreenState extends State<TaskScreen> {
 
     if (_controller.editedTask != null) {
       mode = Mode.EDIT;
+      _editedTask.setId(_controller.editedTask.id);
       _titleController.text = _controller.editedTask.title;
       _descriptionController.text = _controller.editedTask.description;
       _endDateController = _controller.editedTask.endDate;
@@ -70,7 +69,7 @@ class _TaskScreenState extends State<TaskScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Text(
-              _controller.editedTask == null ? "Nova Tarefa" : "Editar Tarefa",
+              mode == Mode.SAVE ? "Nova Tarefa" : "Editar Tarefa",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 25,

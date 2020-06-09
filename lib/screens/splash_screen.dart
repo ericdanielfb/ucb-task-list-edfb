@@ -28,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     _controller = Provider.of<Controller>(context);
+    // _controller.reset();
     _controller.loadUserName();
     _controller.loadTaskList();
 
